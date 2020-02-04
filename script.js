@@ -11,34 +11,33 @@ function divide(a, b){
     return parseInt(a) / parseInt(b);
 }
 function operate(a, b, operator){
-    let returnValue = 0;
+    let returnValue = a;
     if (operator==="+"){
-        returnValue = add(returnValue, a);
         for(let i = 0;i<b.length;i++){
             returnValue = add(returnValue, b[i]);
         }
+        console.log(a + "+" + b + "=" + returnValue);
         return returnValue;
     }
     if (operator==="-"){
-        returnValue = add(returnValue, a);
         for(let i = 0;i<b.length;i++){
             returnValue = subtract(returnValue, b[i]);
         }
+        console.log(a + "-" + b + "=" + returnValue);
         return returnValue;
     }
     if (operator==="*"){
-        returnValue = add(returnValue, a);
         for(let i = 0;i<b.length;i++){
             returnValue = multiply(returnValue, b[i]);
-            console.log("Return", returnValue , b);
         }
+        console.log(a + "*" + b + "=" + returnValue);
         return returnValue;
     }
     if (operator==="/"){
-        returnValue = add(returnValue, a);
         for(let i = 0;i<b.length;i++){
             returnValue = divide(returnValue, b[i]);
         }
+        console.log(a + "/" + b + "=" + returnValue);
         return returnValue;
     }
 }
@@ -52,8 +51,11 @@ let firstValue = 0;
 let secondValue = [];
 let operators = [];
 function addBtnToDisplay(e){
-    let objNumber = e.target.innerHTML;
-    document.getElementById("input-display").value += objNumber;
+    let btnNumber = e.target.innerHTML;
+    if (displayValue==="0"){
+        updateDisplay("");
+    }
+    document.getElementById("input-display").value += btnNumber;
     displayValue = document.getElementById("input-display").value;
     document.getElementById("input-display").value = displayValue;
 }
@@ -88,9 +90,12 @@ operatorButtons.forEach(operatorButtons=>{
 document.querySelector("#btn-submit").addEventListener("click", e =>{
     secondValue.push(displayValue);
     let results = 0;
-    results += operate(firstValue, secondValue[0], operators[0]);
+    console.log(secondValue);
+    //Starts by adding first number 3 + 3 * 3 = 18 
+    results = operate(0, firstValue, "+");
+    results = operate(results, secondValue[0], operators[0]);
     for (let i = 1; i<operators.length; i++){
-        results += operate(secondValue[i-1], secondValue[i], operators[i]);
+        results = operate(results, secondValue[i], operators[i]);
     }
     updateDisplay(results);
 });
