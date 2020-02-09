@@ -1,55 +1,61 @@
 function add(a, b){
-    return parseInt(a) + parseInt(b);
+    return parseFloat(a) + parseFloat(b);
 }
 function subtract(a, b){
-    return parseInt(a) - parseInt(b);
+    return parseFloat(a) - parseFloat(b);
 }
 function multiply(a, b){
-    return parseInt(a) * parseInt(b);
+    return parseFloat(a) * parseFloat(b);
 }
 function divide(a, b){
-    return parseInt(a) / parseInt(b);
+    return parseFloat(a) / parseFloat(b);
 }
+
+
 function operate(a, b, operator){
-    let returnValue = a;
+    let returnValue = parseFloat(a);
     if (operator==="+"){
-        for(let i = 0;i<b.length;i++){
-            returnValue = add(returnValue, b[i]);
-        }
+        returnValue = add(returnValue, b);
         console.log(a + "+" + b + "=" + returnValue);
         return returnValue;
     }
     if (operator==="-"){
-        for(let i = 0;i<b.length;i++){
-            returnValue = subtract(returnValue, b[i]);
-        }
+        returnValue = subtract(returnValue, b);
         console.log(a + "-" + b + "=" + returnValue);
         return returnValue;
     }
     if (operator==="*"){
-        for(let i = 0;i<b.length;i++){
-            returnValue = multiply(returnValue, b[i]);
-        }
+        returnValue = multiply(returnValue, b);
         console.log(a + "*" + b + "=" + returnValue);
         return returnValue;
     }
     if (operator==="/"){
-        for(let i = 0;i<b.length;i++){
-            returnValue = divide(returnValue, b[i]);
+        if (parseFloat(b)===0){
+             return "Zero division";
+        }else{
+            returnValue = divide(returnValue, b);
         }
         console.log(a + "/" + b + "=" + returnValue);
         return returnValue;
     }
 }
+
+
 function updateDisplay(newValue){
     document.getElementById("input-display").value = newValue;
     displayValue = newValue;
+    if ((newValue.toString()).search('.')===-1){
+        decimal=false;
+    }
 }
 
 let displayValue = "";
 let firstValue = 0;
 let secondValue = [];
 let operators = [];
+let decimal = false;
+
+
 function addBtnToDisplay(e){
     let btnNumber = e.target.innerHTML;
     if (displayValue==="0"){
@@ -65,13 +71,17 @@ buttons.forEach(button=>{
     button.addEventListener("click", addBtnToDisplay);
 });
 
+//Clear button
 let clearButtton = document.querySelector("#btn-clear");
 clearButtton.addEventListener("click", e =>{
    updateDisplay("");
    firstValue=0;
    secondValue = [];
    operators = [];
+   decimal = false;
 });
+
+//Operator buttons
 let operatorButtons = document.querySelectorAll(".button-operator");
 operatorButtons.forEach(operatorButtons=>{
     operatorButtons.addEventListener("click", e =>{
@@ -87,16 +97,24 @@ operatorButtons.forEach(operatorButtons=>{
     });
 })
 
+//Submit button
 document.querySelector("#btn-submit").addEventListener("click", e =>{
     secondValue.push(displayValue);
     let results = 0;
     console.log(secondValue);
-    //Starts by adding first number 3 + 3 * 3 = 18 
+    //Starts by adding first number
     results = operate(0, firstValue, "+");
-    results = operate(results, secondValue[0], operators[0]);
-    for (let i = 1; i<operators.length; i++){
+    for (let i = 0; i<operators.length; i++){
         results = operate(results, secondValue[i], operators[i]);
     }
+    let isDecimal = results.toString().split(".").length;
+    if (isDecimal > 3){
+        results = results.toFixed(2);
+    }
     updateDisplay(results);
+});
+
+document.querySelector("#btn-dot").addEventListener("click", e => {
+    updateDisplay(displayValue + ".");
 });
 
