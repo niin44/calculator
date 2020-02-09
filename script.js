@@ -99,13 +99,19 @@ operatorButtons.forEach(operatorButtons=>{
 
 //Submit button
 document.querySelector("#btn-submit").addEventListener("click", e =>{
+    if (firstValue===0){
+        firstValue=displayValue;
+    } else{
     secondValue.push(displayValue);
+    }
     let results = 0;
-    console.log(secondValue);
+    
     //Starts by adding first number
     results = operate(0, firstValue, "+");
-    for (let i = 0; i<operators.length; i++){
-        results = operate(results, secondValue[i], operators[i]);
+    if (operators.length>0){
+        for (let i = 0; i<operators.length; i++){
+            results = operate(results, secondValue[i], operators[i]);
+        }
     }
     let isDecimal = results.toString().split(".").length;
     if (isDecimal > 3){
@@ -113,8 +119,10 @@ document.querySelector("#btn-submit").addEventListener("click", e =>{
     }
     updateDisplay(results);
 });
-
+//comma button
 document.querySelector("#btn-dot").addEventListener("click", e => {
+    if (!displayValue.includes(".")){
     updateDisplay(displayValue + ".");
+    }
 });
 
